@@ -25,7 +25,12 @@ TList* StRootMerger::GenerateFileList(TString dir, Int_t &nfiles, Int_t start, I
     url = dir.Data();
     url += file;
     stat(url.Data(),&st_buf);
-    if ( S_ISDIR(st_buf.st_mode) ) continue;
+    if ( S_ISDIR(st_buf.st_mode) ) {
+      if ( url.Contains(".") || url.Contains("merged") ) continue;
+      GenerateFileList(url+"/", nfiles, start, end);
+    }
+    std::cout << url.Data() << std::endl;
+    continue;
     if ( ( start >= 0 && nrf >= start && nrf < end ) || start < 0 ) {
       tmpfile = TFile::Open(url.Data());
       filelist->Add(tmpfile);

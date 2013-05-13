@@ -84,6 +84,7 @@ int main(int argc, char **argv) {
       nrdiv = !(NrFiles%mfiles) ? NrFiles/mfiles : NrFiles/mfiles+1;
       cout << "==> nrdiv = " << nrdiv << endl;
       cout << "-----------------------------------------" << endl;
+      exit(1);
 
       // create output subdirectory 
       outdir = Form("%smerged%d/",args[1].c_str(),nrIter+1);
