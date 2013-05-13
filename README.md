@@ -23,16 +23,17 @@ if you want to use the `rmrg` program to control StRootMerger, do:
 - install ```ckon```: http://tschaume.github.io/ckon/
 - modify ckon.cfg to
 
-        boost=0
         suffix=0
+        yaml=0
         [ckon]
-        src_dir=StRoot
+        src_dir=src
         prog_subdir=programs
         build_dir=build
         install_dir=build
         exclSuffix="Gnuplot Options"
         NoRootCint=YamlCpp
         cppflags="-Wall"
+        boost=""
 
 - run ```ckon``` to install ```rmrg```
 - ```./build/bin/rmrg testdir/ 7```
