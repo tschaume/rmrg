@@ -34,8 +34,9 @@ using namespace std;
 int main(int argc, char **argv) {
 
   TApplication* theApp = new TApplication("App", &argc, argv);
+  const Int_t ArgcMax = 6;
 
-  if ( theApp->Argc() >= 3 && theApp->Argc() <= 5 ) {
+  if ( theApp->Argc() >= 3 && theApp->Argc() <= ArgcMax ) {
     // 0 = program name
     // 1 = input dir
     // 2 = #files to merge at once
@@ -44,9 +45,9 @@ int main(int argc, char **argv) {
     // 4 = FileSizeStop: stop at given file size of merged-files
 
     // copy argv to allow for optional arguments
-    string args[5];
-    for ( Int_t i = 0; i < 5; i++ ) { args[i] = "Null"; }
-    for ( Int_t i = 1; i < theApp->Argc() && i < 5; i++ ) {
+    string args[ArgcMax];
+    for ( Int_t i = 0; i < ArgcMax; i++ ) { args[i] = "Null"; }
+    for ( Int_t i = 1; i < theApp->Argc() && i < ArgcMax; i++ ) {
       args[i] = theApp->Argv(i);
       cout << "args[" << i << "] = " << args[i] << endl;
     }
@@ -55,11 +56,13 @@ int main(int argc, char **argv) {
     Int_t nrdiv = 1000000; // initialized w/ very high number of divs
     Int_t NrFiles = 1000000; // initialized w/ very high number of files
     Int_t mfiles = atoi(args[2].c_str());
+    Bool_t HistosOnly = kFALSE; // merge Tree & Histos by default
+    if ( args[3].compare("Null") != 0 ) HistosOnly = (Bool_t)(atoi(args[3].c_str()));
     Int_t NrFilesStop = -1; // disabled by default
-    if ( args[3].compare("Null") != 0 ) NrFilesStop = atoi(args[3].c_str());
+    if ( args[4].compare("Null") != 0 ) NrFilesStop = atoi(args[4].c_str());
     Float_t FileSizeStop = 1000000; // MB, disabled by default
     Float_t minFileSize = -1.; // only init for first while condition
-    if ( args[4].compare("Null") != 0 ) FileSizeStop = atof(args[4].c_str());
+    if ( args[5].compare("Null") != 0 ) FileSizeStop = atof(args[5].c_str());
     TString indir, subdir, outdir, mstr;
     Int_t nrIter = 0;
     TList* filelist = NULL;
@@ -67,7 +70,7 @@ int main(int argc, char **argv) {
     Int_t start, end;
     Int_t nf_tmp;
 
-    StRootMerger* rmrg = new StRootMerger();
+    StRootMerger* rmrg = new StRootMerger(HistosOnly);
 
     cout << "NrFilesStop = " << NrFilesStop << "    FileSizeStop = " << FileSizeStop << endl;
 
@@ -118,7 +121,7 @@ int main(int argc, char **argv) {
   }
   else {
     cout << "Usage:" << endl;
-    cout << "./rmrg InputDir mfiles [ NrFilesStop [FileSizeStop] ]" << endl;
+    cout << "./rmrg InputDir mfiles [ HistosOnly [ NrFilesStop [FileSizeStop] ] ]" << endl;
   }
 
   cout << "==> Application finished." << endl;

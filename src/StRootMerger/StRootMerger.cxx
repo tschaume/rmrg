@@ -13,7 +13,7 @@ TChain* globChain = NULL;
 
 ClassImp(StRootMerger)
 
-StRootMerger::StRootMerger() { }
+StRootMerger::StRootMerger(const Bool_t& b) : mHistosOnly(b) { }
 
 TList* StRootMerger::GenerateFileList(TString dir, Int_t &nfiles, Int_t start, Int_t end) {
   // function to generate filelist of given directory
@@ -98,6 +98,7 @@ void StRootMerger::MergeObjects(TDirectory *target, TList *filelist) {
     oldkey = key;
     first_source->cd(path);
     TObject *obj = key->ReadObj();
+    if ( mHistosOnly && ObjInheritsFromTClass(obj,TTree::Class()) ) continue;
     if ( TypeIsImplemented(obj,first_source->GetName()) ) {
       cout << "Merging object " << obj->GetName() << " ... " << flush;
       TFile *nextsource = (TFile*)filelist->After( first_source );

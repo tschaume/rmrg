@@ -19,10 +19,11 @@
 class StRootMerger {
 
  private: 
+   Bool_t mHistosOnly;
 
  public:
 
-   StRootMerger();
+   StRootMerger(const Bool_t&);
    virtual ~StRootMerger() {};
 
    Bool_t callSpecificMerger(TObject* obj, const char* nextname) ;
